@@ -13,7 +13,7 @@ disciplinasRoutes.post("/", disciplinaController.create)
 
 disciplinasRoutes.put("/:id", disciplinaController.update)
 
-disciplinasRoutes.get("/:id", disciplinaController.delete)
+disciplinasRoutes.delete("/:id", disciplinaController.delete)
 
 
 module.exports = disciplinasRoutes

@@ -11,7 +11,7 @@ class disciplinasController {
                 semestre : semestre,
                 prof_id: prof_id
             }
-            
+
             const response = await disciplinasModel.create(disciplina)
         
             res.status(201).json({response, msg: "Disciplina criada com sucesso"}) 
@@ -46,7 +46,7 @@ class disciplinasController {
                 return res.status(404).json({msg: "Disciplina não encontrada"})
             }
 
-            res.status(201).json({users, msg: "Mostrei um"})
+            res.status(201).json({disciplina, msg: "Mostrei uma"})
 
         } catch (error) {
 

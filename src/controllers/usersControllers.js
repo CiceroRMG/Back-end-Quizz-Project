@@ -12,12 +12,23 @@ class usersController {
                 tipo: tipo,
                 matricula: matricula
             }
-            
+
+            //valida se o campo nome contém somente letras e espaços em branco
+            const regexDoNome = /^[A-Za-z\s]+$/
+            if (!regexDoNome.test(nome)) {
+                return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
+            }
+
             const response = await usersModel.create(user)
         
-            res.status(201).json({response, msg: "Serviço criado com sucesso"}) 
+            res.status(201).json({response, msg: "Usuário criado com sucesso"}) 
         } catch (error) {
-
+            // erro caso o email ou a matrícula ja tenham sido usados
+            // error code 11000 é o erro do mongoose quando a chave é definida como única e tentam cadastrar a mesma chave
+            if (error.code === 11000){
+                const chaveDuplicada = Object.keys(error.keyValue)[0]
+                return res.status(400).json({msg:`${chaveDuplicada} ja esta em uso`})
+            }
             console.log(error)
 
         }
@@ -80,14 +91,18 @@ class usersController {
     async update(req, res){
         const id = req.params.id
 
-        const {nome, email, senha, matricula, tipo} = req.body
+        const {nome, email, senha, senhaAntiga} = req.body
 
         const user = {
             nome : nome,
             email : email,
             senha : senha,
-            tipo: tipo,
-            matricula: matricula
+        }
+
+        // valida se o usuario sabe a senha antiga para atualizar os dados
+        const atualUser = await usersModel.findById(id)
+        if (atualUser.senha !== senhaAntiga){
+            return res.status(400).json({msg: "A senha antiga não esta correta"})
         }
 
         const updatedUser = await usersModel.findByIdAndUpdate(id, user)
