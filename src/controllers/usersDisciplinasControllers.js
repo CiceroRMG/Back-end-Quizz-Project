@@ -66,7 +66,7 @@ class usersDisciplinasController {
             const parametro = req.params.id
 
             //verifica se o parametro é igual a algum dos ids da linha, se for retorna todas linhas que contem aquele id
-            const procurandoSeExiste = await usersDisciplinasModel.find({
+            const alunoDisciplina = await usersDisciplinasModel.find({
                 $or: [
                     { _id: parametro },
                     { aluno_id: parametro },
@@ -75,11 +75,11 @@ class usersDisciplinasController {
             })
 
             // verifica se retorna um null ou um array vazio
-            if (!procurandoSeExiste || procurandoSeExiste.length === 0){
+            if (!alunoDisciplina || alunoDisciplina.length === 0){
                 return res.status(404).json({msg: "Esse id não esta vinculado a nenhum aluno e nenhuma disciplina"})
             }
 
-            res.status(201).json({procurandoSeExiste, msg: "Mostrando os que tem o id igual ao parametro"})
+            res.status(201).json({alunoDisciplina, msg: "Mostrando os que tem o id igual ao parametro"})
 
         } catch (error) {
 

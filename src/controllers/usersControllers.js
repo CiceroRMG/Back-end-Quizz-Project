@@ -21,7 +21,7 @@ class usersController {
 
             const response = await usersModel.create(user)
         
-            res.status(201).json({response, msg: "Usuário criado com sucesso"}) 
+            res.status(201).json({user, msg: "Usuário criado com sucesso"}) 
         } catch (error) {
             // erro caso o email ou a matrícula ja tenham sido usados
             // error code 11000 é o erro do mongoose quando a chave é definida como única e tentam cadastrar a mesma chave
@@ -58,7 +58,7 @@ class usersController {
                 return res.status(404).json({msg: "Usuário não encontrado"})
             }
 
-            res.status(201).json({users, msg: "Mostrei um"})
+            res.status(201).json({user, msg: "Mostrei um"})
 
         } catch (error) {
 
