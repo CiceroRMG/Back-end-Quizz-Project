@@ -53,18 +53,18 @@ class quizzesController {
         try {
             const id = req.params.id
 
-            const quizz = await quizzesModel.find({
-                $or: [
-                    { _id: id },
-                    { disciplina_id: id }
-                ]
-            })
+            const quizz = await quizzesModel.findOne({_id: id})
 
-            if (!quizz || quizz.length === 0){
-                return res.status(404).json({msg: "Quizz ou disciplina não encontrados"})
+            // se o id não for de um quizz, vai verificar se é de uma disciplina, o nome duplicado(quizz) é só pra não bugar a req do front
+            if (!quizz){
+                const quizz = await quizzesModel.find({disciplina_id: id})
+                if(!quizz){
+                    return res.status(404).json({msg: "Quizz e Disciplina não encontrados"})
+                }
+                return res.status(201).json({quizz, msg: "Mostrando os quizzes da disciplina"})
             }
 
-            res.status(201).json({quizz, msg: "Mostrando um quizz ou todos os quizzes de uma discplina"})
+            res.status(201).json({quizz, msg: "Mostrando um quizz"})
 
         } catch (error) {
 
