@@ -1,14 +1,17 @@
 const usersModel = require("../models/Users.js")
+const {hash} = require("bcrypt")
 
 class usersController {
     async create(req, res){
         try {
             const {nome, email, senha, matricula, tipo} = req.body
 
+            const senhaCriptografada = await hash(senha, 8)
+
             const user = {
                 nome : nome,
                 email : email,
-                senha : senha,
+                senha : senhaCriptografada,
                 tipo: tipo,
                 matricula: matricula
             }
@@ -19,9 +22,11 @@ class usersController {
                 return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
             }
 
-            const response = await usersModel.create(user)
+            const userCreate = await usersModel.create(user)
         
-            res.status(201).json({user, msg: "Usuário criado com sucesso"}) 
+            res.status(201).json({userCreate, msg: "Usuário criado com sucesso"})
+            
+            
         } catch (error) {
             // erro caso o email ou a matrícula ja tenham sido usados
             // error code 11000 é o erro do mongoose quando a chave é definida como única e tentam cadastrar a mesma chave
