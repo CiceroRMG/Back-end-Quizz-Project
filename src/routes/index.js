@@ -5,6 +5,7 @@ const disciplinasRoutes = require("./disciplina.routes.js")
 const usersDisciplinasRoutes = require("./usersDisciplinas.routes.js")
 const quizzesRoutes = require("./quizzes.routes.js")
 const loginRoutes = require("./login.routes.js")
+const userTokenRoutes = require("./userToken.routes.js")
 
 const routes = Router()
 
@@ -13,6 +14,7 @@ routes.use("/disciplinas", disciplinasRoutes)
 routes.use("/usersDisciplinas", usersDisciplinasRoutes)
 routes.use("/quizzes", quizzesRoutes)
 routes.use("/login", loginRoutes)
+routes.use("/userToken", userTokenRoutes)
 
 
 module.exports = routes

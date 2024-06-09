@@ -1,5 +1,8 @@
 const express = require('express')
 const cors = require('cors')
+const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
+
+const loginRoutes = require("./routes/login.routes")
 
 const app = express()
 app.use(express.json())
@@ -7,8 +10,10 @@ app.use(cors(
     'http://127.0.0.1:5500/'
 ))
 
-
 const routes = require("./routes/index.js")
+
+app.use("/login", loginRoutes)
+app.use(middleware)
 app.use(routes)
 
 //Conectando com o Banco-mongoose

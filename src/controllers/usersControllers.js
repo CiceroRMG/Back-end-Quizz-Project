@@ -1,5 +1,5 @@
 const usersModel = require("../models/Users.js")
-const {hash} = require("bcrypt")
+const {hash, compare} = require("bcrypt")
 
 class usersController {
     async create(req, res){
@@ -98,16 +98,25 @@ class usersController {
 
         const {nome, email, senha, senhaAntiga} = req.body
 
-        const user = {
-            nome : nome,
-            email : email,
-            senha : senha,
+        // valida se o usuario informou a senha antiga
+        if(senha && !senhaAntiga){
+            return res.status(400).json({msg: "Voce precisa informar a senha antiga"})
         }
 
         // valida se o usuario sabe a senha antiga para atualizar os dados
         const atualUser = await usersModel.findById(id)
-        if (atualUser.senha !== senhaAntiga){
+        const senhaValida = await compare(senhaAntiga, atualUser.senha)
+        
+        if (!senhaValida){
             return res.status(400).json({msg: "A senha antiga não esta correta"})
+        }
+
+        const senhaCriptografada = hash(senha, 8)
+
+        const user = {
+            nome : nome,
+            email : email,
+            senha : senhaCriptografada,
         }
 
         const updatedUser = await usersModel.findByIdAndUpdate(id, user)

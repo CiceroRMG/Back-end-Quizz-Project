@@ -25,7 +25,7 @@ class loginController {
             // gerando um token -> (payload, secret, options)
             const token = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '1h' })
     
-            res.json({ token })
+            res.json({ token, userId: usuario._id })
 
         } catch(error) {
             console.log(error)
