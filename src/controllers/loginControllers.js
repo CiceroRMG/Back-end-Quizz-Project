@@ -9,8 +9,16 @@ class loginController {
     async authentication(req, res) {
         try{
             const { matricula, email, senha } = req.body
-    
-            const usuario = await usersModel.findOne({email: email})
+
+            let usuario;
+
+            if(email){
+                usuario = await usersModel.findOne({email: email})
+            }
+
+            if(matricula){
+                usuario = await usersModel.findOne({matricula: matricula})
+            }
 
             if(!usuario){
                 return res.status(401).json({msg: "Login inválido"})

@@ -2,6 +2,8 @@ const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 const usersModel = require("../models/Users.js")
 const disciplinasModel = require("../models/Disciplinas.js")
 
+// checa se o usuario pertence a discplina em questao
+
 class usersDisciplinasController {
     async create(req, res){
         try {
@@ -76,7 +78,7 @@ class usersDisciplinasController {
 
             // verifica se retorna um null ou um array vazio
             if (!alunoDisciplina || alunoDisciplina.length === 0){
-                return res.status(404).json({msg: "Esse id não esta vinculado a nenhum aluno e nenhuma disciplina"})
+                return res.status(404).json({erro: "Esse id não esta vinculado a nenhum aluno e nenhuma disciplina"})
             }
 
             res.status(201).json({alunoDisciplina, msg: "Mostrando os que tem o id igual ao parametro"})
@@ -85,6 +87,27 @@ class usersDisciplinasController {
 
             console.log(error)
 
+        }
+    }
+
+    async checkUserInDiscipline(req, res){
+        try {
+            const { userId, subjectId } = req.params
+    
+            // Verifica se existe um documento com o aluno_id igual ao userId e o disciplina_id igual ao disciplinaId
+            const userInDiscipline = await usersDisciplinasModel.findOne({ aluno_id: userId, disciplina_id: subjectId })
+    
+            if (!userInDiscipline){
+                return res.status(404).json({erro: "Esse usuário não está vinculado a essa disciplina"})
+            }
+    
+            res.status(200).json({msg: "O usuário está vinculado a essa disciplina"})
+    
+        } catch (error) {
+    
+            console.log(error)
+            res.status(500).json({erro: "Erro ao verificar a vinculação do usuário à disciplina"})
+    
         }
     }
 
