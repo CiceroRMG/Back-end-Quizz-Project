@@ -9,6 +9,7 @@ function checkUserToken(req, res, next){
     }
     try {
         const tokenValido = jwt.verify(token, SECRET)
+        
         if(!tokenValido){
             return res.status(401).json({msg: "Esse token foi recusado pelo processo de verificação"})
         }
@@ -18,6 +19,9 @@ function checkUserToken(req, res, next){
 
     } catch(error){
         console.log(error)
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({msg: "O token está expirado"})
+        }
     }
 
 }

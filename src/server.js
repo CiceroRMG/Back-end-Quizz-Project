@@ -1,8 +1,10 @@
 const express = require('express')
 const cors = require('cors')
 const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
+const refreshMiddleware = require('./middlewares/middleWaresRefreshToken.js')
 
 const loginRoutes = require("./routes/login.routes")
+const refreshTokenRoutes = require("./routes/refreshToken.routes.js")
 
 const app = express()
 app.use(express.json())
@@ -13,6 +15,7 @@ app.use(cors(
 const routes = require("./routes/index.js")
 
 app.use("/login", loginRoutes)
+app.use("/refreshToken", refreshMiddleware, refreshTokenRoutes)
 app.use(middleware)
 app.use(routes)
 

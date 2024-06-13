@@ -1,8 +1,10 @@
 const usersModel = require("../models/Users.js")
+const refreshTokenModels = require("../models/RefreshToken.js")
 const { compare } = require("bcrypt")
 
 const jwt = require("jsonwebtoken")
 const SECRET = "pode_ser_qualquer_coisa"
+const refreshSECRET = "essa_e_a_secret_do_refresh_token"
 
 
 class loginController {
@@ -31,9 +33,18 @@ class loginController {
             }
     
             // gerando um token -> (payload, secret, options)
-            const token = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '1h' })
-    
-            res.json({ token, userId: usuario._id })
+            const token = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '5m' })
+            const refreshToken = jwt.sign({userId: usuario._id}, refreshSECRET, { expiresIn: '7d' })
+            
+
+            const refreshTokenDb = {
+                user_id: usuario._id,
+                token: refreshToken
+            }
+            await refreshTokenModels.create(refreshTokenDb)
+
+
+            res.json({ token, refreshToken, userId: usuario._id })
 
         } catch(error) {
             console.log(error)
