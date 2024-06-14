@@ -18,7 +18,7 @@ function checkRefreshToken(req, res, next){
         next()
 
     }  catch(error){
-        console.log(error)
+        console.log("aqui foi o middleware do refreshtoken:", error)
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({msg: "O token está expirado"})
         }

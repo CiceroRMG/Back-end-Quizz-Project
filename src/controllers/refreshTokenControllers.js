@@ -12,18 +12,24 @@ class refreshTokenController {
 
         const refreshTokenInDb = await refreshTokenModels.findOne({token: refreshToken})
         if(!refreshTokenInDb){
-            return res.status(401).json({msg: "O refresh token não foi encontrado no banco"})
+            return res.status(404).json({msg: "O refresh token não foi encontrado no banco"})
         }
 
         const userId = req.userId
         const usuario = await usersModel.findOne({_id: userId})
 
         if(!usuario){
-           return res.status(401).json({msg: "Token não esta atribuido a um usuario"})
+           return res.status(404).json({msg: "Token não esta atribuido a um usuario"})
         }
 
         const newtoken = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '1m' })
         const newRefreshToken = jwt.sign({userId: usuario._id}, refreshSECRET, { expiresIn: '7d' })
+
+        const newRefreshTokenDb = {
+            user_id: usuario._id,
+            token: newRefreshToken
+        }
+        await refreshTokenModels.create(newRefreshTokenDb)
 
         await refreshTokenModels.findOneAndDelete({token: refreshToken})
 
