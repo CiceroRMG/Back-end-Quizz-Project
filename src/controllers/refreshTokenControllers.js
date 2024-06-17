@@ -38,10 +38,15 @@ class refreshTokenController {
     }
 
     async delete(req, res){
-        const { refreshToken } = req.body
-        await refreshTokenModels.findOneAndDelete({token: refreshToken})
-
-        res.status(201).json({msg: "refreshToken deletado com sucesso"})
+        try {
+            const { refreshToken } = req.body
+            await refreshTokenModels.findOneAndDelete({token: refreshToken})
+    
+            res.status(201).json({msg: "refreshToken deletado com sucesso"})
+            
+        } catch (error) {
+            res.status(401).json({msg: "não foi possível deletar o refreshToken do localStorage"})
+        }
     }
 
 }

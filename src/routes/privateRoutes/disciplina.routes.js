@@ -2,7 +2,7 @@ const { Router } = require("express")
 
 const disciplinasRoutes = Router()
 
-const disciplinasControllers = require("../controllers/disciplinasControllers")
+const disciplinasControllers = require("../../controllers/disciplinasControllers")
 const disciplinaController = new disciplinasControllers
 
 disciplinasRoutes.get("/", disciplinaController.getAll)

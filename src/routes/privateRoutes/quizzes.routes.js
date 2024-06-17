@@ -2,7 +2,7 @@ const { Router } = require("express")
 
 const quizzesRoutes = Router()
 
-const quizzesControllers = require("../controllers/quizzesControllers.js")
+const quizzesControllers = require("../../controllers/quizzesControllers.js")
 const quizzesController = new quizzesControllers
 
 quizzesRoutes.get("/", quizzesController.getAll)

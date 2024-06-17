@@ -18,10 +18,12 @@ function checkUserToken(req, res, next){
         next()
 
     } catch(error){
-        console.log("esse é o erro:", error)
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({msg: "O token está expirado"})
+        } else {
+            return res.status(500).json({msg: "Ocorreu algum erro no middleware dos tokens"})
         }
+
     }
 
 }

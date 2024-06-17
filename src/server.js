@@ -3,8 +3,8 @@ const cors = require('cors')
 const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
 const refreshMiddleware = require('./middlewares/middleWaresRefreshToken.js')
 
-const loginRoutes = require("./routes/login.routes")
-const refreshTokenRoutes = require("./routes/refreshToken.routes.js")
+const loginRoutes = require("./routes/publicRoutes/login.routes.js")
+const refreshTokenRoutes = require("./routes/publicRoutes/refreshToken.routes.js")
 
 const app = express()
 app.use(express.json())
@@ -12,7 +12,7 @@ app.use(cors(
     'http://127.0.0.1:5500/'
 ))
 
-const routes = require("./routes/index.js")
+const routes = require("./routes/privateRoutes/index.js")
 
 app.use("/login", loginRoutes)
 app.use("/refreshToken", refreshMiddleware, refreshTokenRoutes)

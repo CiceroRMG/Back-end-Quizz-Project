@@ -2,7 +2,7 @@ const { Router } = require("express")
 
 const usersDisciplinasRoutes = Router()
 
-const usersDisciplinasControllers = require("../controllers/usersDisciplinasControllers.js")
+const usersDisciplinasControllers = require("../../controllers/usersDisciplinasControllers.js")
 const usersDisciplinasController = new usersDisciplinasControllers
 
 usersDisciplinasRoutes.post("/", usersDisciplinasController.create)

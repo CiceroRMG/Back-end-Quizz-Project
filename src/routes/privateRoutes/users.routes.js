@@ -2,7 +2,7 @@ const { Router } = require("express")
 
 const userRoutes = Router()
 
-const usersController = require("../controllers/usersControllers.js")
+const usersController = require("../../controllers/usersControllers.js")
 const userController = new usersController
 
 userRoutes.get("/", userController.getAll)
