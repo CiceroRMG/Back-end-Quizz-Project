@@ -55,6 +55,25 @@ class disciplinasController {
         }
     }
 
+    async getProfessor(req, res){
+        try {
+            const id = req.params.id
+
+            const disciplinas = await disciplinasModel.find({prof_id: id})
+
+            if (!disciplinas || disciplinas === 0){
+                return res.status(404).json({msg: "Esse professor não possui disciplinas"})
+            }
+
+            res.status(201).json({disciplinas, msg: "Disciplinas do Professor"})
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+    }
+
     async delete(req, res){
         try {
             const id = req.params.id

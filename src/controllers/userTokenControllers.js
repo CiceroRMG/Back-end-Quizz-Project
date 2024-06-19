@@ -22,6 +22,24 @@ class userTokenController {
         }
 
     }
+    async getType(req, res) {
+        try{
+            const userId = req.userId
+    
+            const usuario = await usersModel.findOne({_id: userId})
+
+            if(!usuario){
+                return res.status(401).json({msg: "Token não esta atribuido a um usuario"})
+            }
+    
+            res.json({ usuario: usuario.tipo })
+
+        } catch(error) {
+            console.log(error)
+            return res.status(500).json({msg: 'Erro ao realizar a requisição de token para tabela user'})
+        }
+
+    }
 }
 
 module.exports = userTokenController

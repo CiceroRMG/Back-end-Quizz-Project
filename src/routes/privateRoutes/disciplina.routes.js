@@ -15,5 +15,7 @@ disciplinasRoutes.put("/:id", disciplinaController.update)
 
 disciplinasRoutes.delete("/:id", disciplinaController.delete)
 
+disciplinasRoutes.get("/prof/:id", disciplinaController.getProfessor)
+
 
 module.exports = disciplinasRoutes

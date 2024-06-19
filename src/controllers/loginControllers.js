@@ -39,12 +39,12 @@ class loginController {
 
             const refreshTokenDb = {
                 user_id: usuario._id,
-                token: refreshToken
+                token: refreshToken,
             }
             await refreshTokenModels.create(refreshTokenDb)
 
 
-            res.json({ token, refreshToken, userId: usuario._id })
+            res.json({ token, refreshToken, userId: usuario._id, tipo: usuario.tipo })
 
         } catch(error) {
             console.log(error)

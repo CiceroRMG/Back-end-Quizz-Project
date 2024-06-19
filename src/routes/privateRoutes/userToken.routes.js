@@ -6,6 +6,7 @@ const userTokenControllers = require('../../controllers/userTokenControllers.js'
 const userTokenController = new userTokenControllers
 
 userTokenRoutes.post("/", userTokenController.get)
+userTokenRoutes.get("/", userTokenController.getType)
 
 
 module.exports = userTokenRoutes
