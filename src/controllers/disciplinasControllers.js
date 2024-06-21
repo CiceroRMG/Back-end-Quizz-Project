@@ -5,6 +5,12 @@ class disciplinasController {
         try {
             const {nome, ano, semestre, prof_id} = req.body
 
+            const userId = req.userId
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin'){
+                return res.status(401).json({msg: "O usuario não é admin"})
+            } 
+
             const disciplina = {
                 nome : nome,
                 ano : ano,
@@ -77,6 +83,12 @@ class disciplinasController {
     async delete(req, res){
         try {
             const id = req.params.id
+            
+            const userId = req.userId
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin'){
+                return res.status(401).json({msg: "O usuario não é admin"})
+            } 
 
             const disciplina = await disciplinasModel.findById(id)
 

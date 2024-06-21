@@ -6,6 +6,13 @@ class usersController {
         try {
             const {nome, email, senha, matricula, tipo} = req.body
 
+            // verifica se o usuario que esta tentando criar é um admin
+            const userId = req.userId
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin'){
+                return res.status(401).json({msg: "O usuario não é admin"})
+            } 
+
             const senhaCriptografada = await hash(senha, 8)
 
             const user = {
@@ -75,6 +82,12 @@ class usersController {
     async delete(req, res){
         try {
             const id = req.params.id
+
+            const userId = req.userId
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin'){
+                return res.status(401).json({msg: "O usuario não é admin"})
+            } 
 
             const user = await usersModel.findById(id)
 
