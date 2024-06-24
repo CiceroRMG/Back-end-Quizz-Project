@@ -1,9 +1,17 @@
 const quizzesModel = require("../models/Quizzes.js")
 const disciplinasModel = require("../models/Disciplinas.js")
+const usersModel = require("../models/Users.js")
 
 class quizzesController {
     async create(req, res){
         try {
+            // verifica se o usuario que esta tentando criar é um admin ou um professor
+            const userId = req.userId
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin' || verifyIfIsAdmin.tipo !== 'professor'){
+                return res.status(401).json({msg: "O usuario não é admin nem um professor"})
+            } 
+
             const {titulo, tempo, tentativas, disciplina_id, data_inicio, data_fim, mensagem, tipo, perguntas} = req.body
 
             const disciplina = await disciplinasModel.findById(disciplina_id)
@@ -11,7 +19,6 @@ class quizzesController {
             if (!disciplina){
                 return res.status(404).json({msg: "Esse id de disciplina não foi encontrado"})
             }
-
 
             const quizz = {
                 titulo : titulo,
@@ -26,8 +33,27 @@ class quizzesController {
             }
 
             const response = await quizzesModel.create(quizz)
-        
+
+            // colocando os quizzes recem criados dentro da disciplina correspondente
+            const quizzId = response._id
+
+            // Verificando se o quizz foi criado com sucesso e possui um _id
+            if (!response || !response._id) {
+                console.log("Quizz criado, mas sem _id.");
+                return res.status(500).json({msg: "Erro ao criar o quizz, ID não encontrado."});
+            }
+
+            await disciplinasModel.findByIdAndUpdate(disciplina_id, {
+                $push: {
+                    quizes: {
+                        quizz_id: quizzId,
+                        nome: titulo
+                    }
+                }
+            })
+
             res.status(201).json({quizz, msg: "Quizz criado com sucesso"}) 
+
         } catch (error) {
 
             console.log(error, "Algo deu erro ao criar um Quizz")

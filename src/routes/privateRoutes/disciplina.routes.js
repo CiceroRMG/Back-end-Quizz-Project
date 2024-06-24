@@ -17,5 +17,7 @@ disciplinasRoutes.delete("/:id", disciplinaController.delete)
 
 disciplinasRoutes.get("/prof/:id", disciplinaController.getProfessor)
 
+disciplinasRoutes.get("/painel/data", disciplinaController.getSubjectProfessorAndQuizzes)
+
 
 module.exports = disciplinasRoutes

@@ -22,7 +22,7 @@ class refreshTokenController {
            return res.status(404).json({msg: "Token não esta atribuido a um usuario"})
         }
 
-        const newtoken = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '1m' })
+        const newtoken = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '10m' })
         const newRefreshToken = jwt.sign({userId: usuario._id}, refreshSECRET, { expiresIn: '7d' })
 
         const newRefreshTokenDb = {

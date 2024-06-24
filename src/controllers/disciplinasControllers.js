@@ -80,6 +80,24 @@ class disciplinasController {
         }
     }
 
+    async getSubjectProfessorAndQuizzes(req, res){
+        try {
+
+            const disciplinas = await disciplinasModel.find().populate('prof_id', 'nome')
+
+            if (!disciplinas || disciplinas.length === 0){
+                return res.status(404).json({msg: "Esse professor não possui disciplinas"})
+            }
+
+            res.status(201).json({disciplinas, msg: "Disciplinas do Professor"})
+
+        } catch (error) {
+
+            console.log("caiu no erro do populate disciplinas", error)
+
+        }
+    }
+
     async delete(req, res){
         try {
             const id = req.params.id

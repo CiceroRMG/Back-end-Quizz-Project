@@ -33,7 +33,7 @@ class loginController {
             }
     
             // gerando um token -> (payload, secret, options)
-            const token = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '1m' })
+            const token = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '10m' })
             const refreshToken = jwt.sign({userId: usuario._id}, refreshSECRET, { expiresIn: '7d' })
             
 
