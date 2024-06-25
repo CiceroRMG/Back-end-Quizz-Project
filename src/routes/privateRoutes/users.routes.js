@@ -15,5 +15,7 @@ userRoutes.delete("/:id", userController.delete)
 
 userRoutes.put("/:id", userController.update)
 
+userRoutes.get("/register/getAllProfessor", userController.getAllProfessor)
+
 
 module.exports = userRoutes

@@ -23,7 +23,7 @@ const disciplinasSchema = new Schema({
     quizes: [{
         quizz_id: {
             type: Schema.Types.ObjectId,
-            ref: "Quizz",
+            ref: "Quizzes",
             default: null
         },
         nome: {

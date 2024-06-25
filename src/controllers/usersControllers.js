@@ -141,6 +141,19 @@ class usersController {
 
         res.status(200).json({user, msg: "Usuário atualizado com sucesso"})
     }
+
+    async getAllProfessor(req, res){
+        try {
+
+            const professores = await usersModel.find({ tipo: "professor" }, "nome")
+            res.status(201).json({professores, msg: "Lista de todos os professores"})
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+    }
 }
 
 module.exports = usersController

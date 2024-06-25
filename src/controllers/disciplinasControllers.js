@@ -1,4 +1,5 @@
 const disciplinasModel = require("../models/Disciplinas.js")
+const usersModel = require("../models/Users.js")
 
 class disciplinasController {
     async create(req, res){
@@ -22,9 +23,12 @@ class disciplinasController {
         
             res.status(201).json({response, msg: "Disciplina criada com sucesso"}) 
         } catch (error) {
-
-            console.log(error)
-
+            if (error.code === 11000) {
+                return res.status(409).json({msg: "Dados duplicados. Esta disciplina já existe."});
+            } else {
+                console.log(error);
+                return res.status(500).json({msg: "Erro ao criar disciplina"});
+            }
         }
     }
 
