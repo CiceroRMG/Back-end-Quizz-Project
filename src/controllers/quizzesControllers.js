@@ -8,7 +8,8 @@ class quizzesController {
             // verifica se o usuario que esta tentando criar é um admin ou um professor
             const userId = req.userId
             const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
-            if(verifyIfIsAdmin.tipo !== 'admin' || verifyIfIsAdmin.tipo !== 'professor'){
+            
+            if(verifyIfIsAdmin.tipo !== 'admin' && verifyIfIsAdmin.tipo !== 'professor'){
                 return res.status(401).json({msg: "O usuario não é admin nem um professor"})
             } 
 
