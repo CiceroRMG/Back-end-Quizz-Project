@@ -1,6 +1,7 @@
 const disciplinasModel = require("../models/Disciplinas.js")
 const usersModel = require("../models/Users.js")
-
+const quizzesModel = require("../models/Quizzes")
+const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 class disciplinasController {
     async create(req, res){
         try {
@@ -118,9 +119,15 @@ class disciplinasController {
                 return res.status(404).json({msg: "Disciplina não encontrada"})
             }
 
-            const deletedDisciplina = await disciplinasModel.findOneAndDelete(id)
+            const deletedDisciplina = await disciplinasModel.findOneAndDelete({_id: id})
 
-            res.status(200).json({deletedDisciplina, msg: "Usuario deletado com sucesso"})
+            // Deletar quizzes relacionados com a disciplina
+            await quizzesModel.deleteMany({ disciplina_id: id });
+
+            // Deletar relações em usersDisciplinas com a disciplina
+            await usersDisciplinasModel.deleteMany({ disciplina_id: id });
+
+            res.status(200).json({deletedDisciplina, msg: "Disciplina deletada com sucesso"})
 
         } catch (error) {
 
@@ -131,6 +138,12 @@ class disciplinasController {
 
     async update(req, res){
         const id = req.params.id
+        const userId = req.userId
+
+        const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+        if(verifyIfIsAdmin.tipo !== 'admin'){
+            return res.status(401).json({msg: "O usuario não é admin"})
+        } 
 
         const {nome, ano, semestre, prof_id} = req.body
 
@@ -138,7 +151,7 @@ class disciplinasController {
             nome : nome,
             ano : ano,
             semestre : semestre,
-            prof_id: prof_id
+            prof_id: prof_id === '' ? null : prof_id
         }
 
         const updatedDisciplina = await disciplinasModel.findByIdAndUpdate(id, disciplina)
