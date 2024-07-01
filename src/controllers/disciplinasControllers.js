@@ -51,7 +51,7 @@ class disciplinasController {
         try {
             const id = req.params.id
 
-            const disciplina = await disciplinasModel.findById(id)
+            const disciplina = await disciplinasModel.findById(id).populate('prof_id', 'nome')
 
             if (!disciplina){
                 return res.status(404).json({msg: "Disciplina não encontrada"})
@@ -137,31 +137,41 @@ class disciplinasController {
     }
 
     async update(req, res){
-        const id = req.params.id
-        const userId = req.userId
-
-        const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
-        if(verifyIfIsAdmin.tipo !== 'admin'){
-            return res.status(401).json({msg: "O usuario não é admin"})
-        } 
-
-        const {nome, ano, semestre, prof_id} = req.body
-
-        const disciplina = {
-            nome : nome,
-            ano : ano,
-            semestre : semestre,
-            prof_id: prof_id === '' ? null : prof_id
+        try {
+            const id = req.params.id
+            const userId = req.userId
+    
+            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+            if(verifyIfIsAdmin.tipo !== 'admin'){
+                return res.status(401).json({msg: "O usuario não é admin"})
+            } 
+    
+            const {nome, ano, semestre, prof_id} = req.body
+    
+            const disciplina = {
+                nome : nome,
+                ano : ano,
+                semestre : semestre,
+                prof_id: prof_id === '' ? null : prof_id
+            }
+    
+            const updatedDisciplina = await disciplinasModel.findByIdAndUpdate(id, disciplina)
+    
+            if (!updatedDisciplina) {
+                res.status(404).json({msg: "Disciplina não encontrada"})
+                return
+            }
+    
+            res.status(200).json({disciplina, msg: "Disciplina atualizada com sucesso"})
+            
+        } catch (error) {
+            if (error.code === 11000) {
+                return res.status(409).json({msg: "Dados duplicados. Esta disciplina já existe."});
+            } else {
+                console.log(error);
+                return res.status(500).json({msg: "Erro ao atualizar disciplina"});
+            }
         }
-
-        const updatedDisciplina = await disciplinasModel.findByIdAndUpdate(id, disciplina)
-
-        if (!updatedDisciplina) {
-            res.status(404).json({msg: "Disciplina não encontrada"})
-            return
-        }
-
-        res.status(200).json({disciplina, msg: "Disciplina atualizada com sucesso"})
     }
 }
 
