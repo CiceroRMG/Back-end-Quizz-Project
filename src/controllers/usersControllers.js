@@ -154,6 +154,19 @@ class usersController {
 
         }
     }
+
+    async getAllStudents(req, res){
+        try {
+
+            const alunos = await usersModel.find({ tipo: "aluno" }, "nome matricula")
+            res.status(201).json({alunos, msg: "Lista de todos os alunos"})
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+    }
 }
 
 module.exports = usersController

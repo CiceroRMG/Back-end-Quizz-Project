@@ -17,5 +17,7 @@ userRoutes.put("/:id", userController.update)
 
 userRoutes.get("/register/getAllProfessor", userController.getAllProfessor)
 
+userRoutes.get("/register/getAllStudents", userController.getAllStudents)
+
 
 module.exports = userRoutes

@@ -74,12 +74,13 @@ class usersDisciplinasController {
                     { aluno_id: parametro },
                     { disciplina_id: parametro }
                 ]
-            })
-
+            }).populate('disciplina_id', 'nome')
             // verifica se retorna um null ou um array vazio
-            if (!alunoDisciplina || alunoDisciplina.length === 0){
-                return res.status(404).json({erro: "Esse id não esta vinculado a nenhum aluno e nenhuma disciplina"})
+            if (!alunoDisciplina){
+                return res.status(201).json({alunoDisciplina: []})
             }
+
+            //tem que fazer uma verificação pra ver se o id esta atribuido a alguma coisa
 
             res.status(201).json({alunoDisciplina, msg: "Mostrando os que tem o id igual ao parametro"})
 

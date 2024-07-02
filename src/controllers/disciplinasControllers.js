@@ -36,8 +36,8 @@ class disciplinasController {
     async getAll(req, res){
         try {
 
-            const disciplinas = await disciplinasModel.find()
-            res.status(201).json({disciplinas, msg: "Mostrei todas disciplinas"})
+            const disciplinas = await disciplinasModel.find({}, "nome ano semestre")
+            res.status(201).json({disciplinas, msg: "Mostrando todas as disciplinas"})
 
         } catch (error) {
 
