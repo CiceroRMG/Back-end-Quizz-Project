@@ -1,5 +1,6 @@
 const usersModel = require("../models/Users.js")
 const {hash, compare} = require("bcrypt")
+const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 
 class usersController {
     async create(req, res){
@@ -29,9 +30,9 @@ class usersController {
                 return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
             }
 
-            const userCreate = await usersModel.create(user)
+            const newUser = await usersModel.create(user)
         
-            res.status(201).json({userCreate, msg: "Usuário criado com sucesso"})
+            res.status(201).json({newUser, msg: "Usuário criado com sucesso"})
             
             
         } catch (error) {
@@ -39,7 +40,7 @@ class usersController {
             // error code 11000 é o erro do mongoose quando a chave é definida como única e tentam cadastrar a mesma chave
             if (error.code === 11000){
                 const chaveDuplicada = Object.keys(error.keyValue)[0]
-                return res.status(400).json({msg:`${chaveDuplicada} ja esta em uso`})
+                return res.status(409).json({msg:`${chaveDuplicada} ja esta em uso`})
             }
             console.log(error)
 
@@ -95,7 +96,9 @@ class usersController {
                 return res.status(404).json({msg: "Usuário não encontrado"})
             }
 
-            const deletedUser = await usersModel.findOneAndDelete(id)
+            const deletedUser = await usersModel.findOneAndDelete({_id: id})
+
+            await usersDisciplinasModel.deleteMany({ aluno_id: id });
 
             res.status(200).json({deletedUser, msg: "Usuario deletado com sucesso"})
 
