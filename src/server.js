@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
 const refreshMiddleware = require('./middlewares/middleWaresRefreshToken.js')
+const errorHandler = require('./middlewares/middleWareAppError.js')
 
 const loginRoutes = require("./routes/publicRoutes/login.routes.js")
 const refreshTokenRoutes = require("./routes/publicRoutes/refreshToken.routes.js")
@@ -18,6 +19,7 @@ app.use("/login", loginRoutes)
 app.use("/refreshToken", refreshMiddleware, refreshTokenRoutes)
 app.use(middleware)
 app.use(routes)
+app.use(errorHandler)
 
 //Conectando com o Banco-mongoose
 const conn = require("./database/connection.js")

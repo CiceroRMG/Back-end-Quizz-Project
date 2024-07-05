@@ -1,17 +1,18 @@
 const usersModel = require("../models/Users.js")
 const {hash, compare} = require("bcrypt")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
+const AppError = require("../utils/appError.js")
 
 class usersController {
     async create(req, res){
-        try {
             const {nome, email, senha, matricula, tipo} = req.body
 
             // verifica se o usuario que esta tentando criar é um admin
             const userId = req.userId
             const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
             if(verifyIfIsAdmin.tipo !== 'admin'){
-                return res.status(401).json({msg: "O usuario não é admin"})
+                // return res.status(401).json({msg: "O usuario não é admin"})
+                throw new AppError("O usuário não é um admin", 401)
             } 
 
             const senhaCriptografada = await hash(senha, 8)
@@ -27,24 +28,14 @@ class usersController {
             //valida se o campo nome contém somente letras e espaços em branco
             const regexDoNome = /^[A-Za-z\s]+$/
             if (!regexDoNome.test(nome)) {
-                return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
+                // return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
+                throw new AppError("O campo deve conter apenas letras", 400)
             }
 
             const newUser = await usersModel.create(user)
         
             res.status(201).json({newUser, msg: "Usuário criado com sucesso"})
             
-            
-        } catch (error) {
-            // erro caso o email ou a matrícula ja tenham sido usados
-            // error code 11000 é o erro do mongoose quando a chave é definida como única e tentam cadastrar a mesma chave
-            if (error.code === 11000){
-                const chaveDuplicada = Object.keys(error.keyValue)[0]
-                return res.status(409).json({msg:`${chaveDuplicada} ja esta em uso`})
-            }
-            console.log(error)
-
-        }
     }
 
     async getAll(req, res){

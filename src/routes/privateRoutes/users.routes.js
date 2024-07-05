@@ -1,15 +1,16 @@
 const { Router } = require("express")
+const tryCatch  = require("../../utils/tryCatch.js")
 
 const userRoutes = Router()
 
 const usersController = require("../../controllers/usersControllers.js")
 const userController = new usersController
 
-userRoutes.get("/", userController.getAll)
+userRoutes.get("/", tryCatch(userController.getAll))
 
 userRoutes.get("/:id", userController.get)
 
-userRoutes.post("/", userController.create)
+userRoutes.post("/", tryCatch(userController.create))
 
 userRoutes.delete("/:id", userController.delete)
 
