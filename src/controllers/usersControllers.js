@@ -3,6 +3,9 @@ const {hash, compare} = require("bcrypt")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 const AppError = require("../utils/appError.js")
 
+const ERROR_CODES = require("../utils/errorCodes.js")
+const USER_ERROR =  ERROR_CODES.USER_ERROR
+
 class usersController {
     async create(req, res){
             const {nome, email, senha, matricula, tipo} = req.body
@@ -12,7 +15,7 @@ class usersController {
             const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
             if(verifyIfIsAdmin.tipo !== 'admin'){
                 // return res.status(401).json({msg: "O usuario não é admin"})
-                throw new AppError("O usuário não é um admin", 401)
+                throw new AppError(USER_ERROR.NOT_ADMIN)
             } 
 
             const senhaCriptografada = await hash(senha, 8)
@@ -29,7 +32,7 @@ class usersController {
             const regexDoNome = /^[A-Za-z\s]+$/
             if (!regexDoNome.test(nome)) {
                 // return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
-                throw new AppError("O campo deve conter apenas letras", 400)
+                throw new AppError(USER_ERROR.INVALID_NAME)
             }
 
             const newUser = await usersModel.create(user)
@@ -39,75 +42,59 @@ class usersController {
     }
 
     async getAll(req, res){
-        try {
 
-            const users = await usersModel.find()
-            res.status(201).json({users, msg: "Mostrei tudo"})
+        const users = await usersModel.find()
+        res.status(201).json({users, msg: "Todos os usuários"})
 
-        } catch (error) {
-
-            console.log(error)
-
-        }
     }
 
 
     async get(req, res){
-        try {
-            const id = req.params.id
+        const id = req.params.id
 
-            const user = await usersModel.findById(id)
+        const user = await usersModel.findById(id)
 
-            if (!user){
-                return res.status(404).json({msg: "Usuário não encontrado"})
-            }
-
-            res.status(201).json({user, msg: "Mostrei um"})
-
-        } catch (error) {
-
-            console.log(error)
-
+        if (!user){
+            throw new AppError(USER_ERROR.DOESNT_EXIST)
         }
+
+        res.status(201).json({user, msg: "Usuário único"}) 
     }
 
     async delete(req, res){
-        try {
-            const id = req.params.id
 
-            const userId = req.userId
-            const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
-            if(verifyIfIsAdmin.tipo !== 'admin'){
-                return res.status(401).json({msg: "O usuario não é admin"})
-            } 
+        const id = req.params.id
 
-            const user = await usersModel.findById(id)
+        const userId = req.userId
+        const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+        if(verifyIfIsAdmin.tipo !== 'admin'){
+            // return res.status(401).json({msg: "O usuario não é admin"})
+            throw new AppError(USER_ERROR.NOT_ADMIN)
+        } 
 
-            if (!user){
-                return res.status(404).json({msg: "Usuário não encontrado"})
-            }
+        const user = await usersModel.findById(id)
 
-            const deletedUser = await usersModel.findOneAndDelete({_id: id})
-
-            await usersDisciplinasModel.deleteMany({ aluno_id: id });
-
-            res.status(200).json({deletedUser, msg: "Usuario deletado com sucesso"})
-
-        } catch (error) {
-
-            console.log(error)
-
+        if (!user){
+            // return res.status(404).json({msg: "Usuário não encontrado"})
+            throw new AppError(USER_ERROR.DOESNT_EXIST)
         }
+
+        const deletedUser = await usersModel.findOneAndDelete({_id: id})
+
+        await usersDisciplinasModel.deleteMany({ aluno_id: id });
+
+        res.status(200).json({deletedUser, msg: "Usuario deletado com sucesso"})
+
     }
 
     async update(req, res){
-        const id = req.params.id
 
+        const id = req.params.id
         const {nome, email, senha, senhaAntiga} = req.body
 
-        // valida se o usuario informou a senha antiga
         if(senha && !senhaAntiga){
-            return res.status(400).json({msg: "Voce precisa informar a senha antiga"})
+            // return res.status(400).json({msg: "Voce precisa informar a senha antiga"})
+            throw new AppError(USER_ERROR.MISSING_OLD_PASSWORD)
         }
 
         // valida se o usuario sabe a senha antiga para atualizar os dados
@@ -115,7 +102,8 @@ class usersController {
         const senhaValida = await compare(senhaAntiga, atualUser.senha)
         
         if (!senhaValida){
-            return res.status(400).json({msg: "A senha antiga não esta correta"})
+            // return res.status(400).json({msg: "A senha antiga não esta correta"})
+            throw new AppError(USER_ERROR.INVALID_OLD_PASSWORD)
         }
 
         const senhaCriptografada = hash(senha, 8)
@@ -129,37 +117,26 @@ class usersController {
         const updatedUser = await usersModel.findByIdAndUpdate(id, user)
 
         if (!updatedUser) {
-            res.status(404).json({msg: "Usuário não encontrado"})
-            return
+            // return res.status(404).json({msg: "Usuário não encontrado"})
+            throw new AppError(USER_ERROR.DOESNT_EXIST)
+            
         }
 
         res.status(200).json({user, msg: "Usuário atualizado com sucesso"})
     }
 
     async getAllProfessor(req, res){
-        try {
 
-            const professores = await usersModel.find({ tipo: "professor" }, "nome")
-            res.status(201).json({professores, msg: "Lista de todos os professores"})
+        const professores = await usersModel.find({ tipo: "professor" }, "nome")
+        res.status(201).json({professores, msg: "Lista de todos os professores"})
 
-        } catch (error) {
-
-            console.log(error)
-
-        }
     }
 
     async getAllStudents(req, res){
-        try {
 
-            const alunos = await usersModel.find({ tipo: "aluno" }, "nome matricula")
-            res.status(201).json({alunos, msg: "Lista de todos os alunos"})
+        const alunos = await usersModel.find({ tipo: "aluno" }, "nome matricula")
+        res.status(201).json({alunos, msg: "Lista de todos os alunos"})
 
-        } catch (error) {
-
-            console.log(error)
-
-        }
     }
 }
 

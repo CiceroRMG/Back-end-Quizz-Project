@@ -1,4 +1,5 @@
 const { Router } = require("express")
+const tryCatch  = require("../../utils/tryCatch.js")
 
 const refreshTokenRoutes = Router()
 
@@ -6,8 +7,8 @@ const refreshTokenControllers = require('../../controllers/refreshTokenControlle
 const refreshTokenController = new refreshTokenControllers
 
 
-refreshTokenRoutes.post("/", refreshTokenController.newToken)
-refreshTokenRoutes.post("/delete", refreshTokenController.delete)
+refreshTokenRoutes.post("/", tryCatch(refreshTokenController.newToken))
+refreshTokenRoutes.post("/delete", tryCatch(refreshTokenController.delete))
 
 
 module.exports = refreshTokenRoutes

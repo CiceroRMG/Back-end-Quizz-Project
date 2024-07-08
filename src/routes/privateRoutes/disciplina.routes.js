@@ -1,23 +1,24 @@
 const { Router } = require("express")
+const tryCatch  = require("../../utils/tryCatch.js")
 
 const disciplinasRoutes = Router()
 
 const disciplinasControllers = require("../../controllers/disciplinasControllers")
 const disciplinaController = new disciplinasControllers
 
-disciplinasRoutes.get("/", disciplinaController.getAll)
+disciplinasRoutes.get("/", tryCatch(disciplinaController.getAll))
 
-disciplinasRoutes.get("/:id", disciplinaController.get)
+disciplinasRoutes.get("/:id", tryCatch(disciplinaController.get))
 
-disciplinasRoutes.post("/", disciplinaController.create)
+disciplinasRoutes.post("/", tryCatch(disciplinaController.create))
 
-disciplinasRoutes.put("/:id", disciplinaController.update)
+disciplinasRoutes.put("/:id", tryCatch(disciplinaController.update))
 
-disciplinasRoutes.delete("/:id", disciplinaController.delete)
+disciplinasRoutes.delete("/:id", tryCatch(disciplinaController.delete))
 
-disciplinasRoutes.get("/prof/:id", disciplinaController.getProfessor)
+disciplinasRoutes.get("/prof/:id", tryCatch(disciplinaController.getProfessor))
 
-disciplinasRoutes.get("/painel/data", disciplinaController.getSubjectProfessorAndQuizzes)
+disciplinasRoutes.get("/painel/data", tryCatch(disciplinaController.getSubjectProfessorAndQuizzes))
 
 
 module.exports = disciplinasRoutes

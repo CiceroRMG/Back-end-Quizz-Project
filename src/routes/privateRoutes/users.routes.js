@@ -8,17 +8,17 @@ const userController = new usersController
 
 userRoutes.get("/", tryCatch(userController.getAll))
 
-userRoutes.get("/:id", userController.get)
+userRoutes.get("/:id", tryCatch(userController.get))
 
 userRoutes.post("/", tryCatch(userController.create))
 
-userRoutes.delete("/:id", userController.delete)
+userRoutes.delete("/:id", tryCatch(userController.delete))
 
-userRoutes.put("/:id", userController.update)
+userRoutes.put("/:id", tryCatch(userController.update))
 
-userRoutes.get("/register/getAllProfessor", userController.getAllProfessor)
+userRoutes.get("/register/getAllProfessor", tryCatch(userController.getAllProfessor))
 
-userRoutes.get("/register/getAllStudents", userController.getAllStudents)
+userRoutes.get("/register/getAllStudents", tryCatch(userController.getAllStudents))
 
 
 module.exports = userRoutes

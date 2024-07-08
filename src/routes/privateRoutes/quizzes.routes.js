@@ -1,19 +1,20 @@
 const { Router } = require("express")
+const tryCatch  = require("../../utils/tryCatch.js")
 
 const quizzesRoutes = Router()
 
 const quizzesControllers = require("../../controllers/quizzesControllers.js")
 const quizzesController = new quizzesControllers
 
-quizzesRoutes.get("/", quizzesController.getAll)
+quizzesRoutes.get("/", tryCatch(quizzesController.getAll))
 
-quizzesRoutes.get("/:id", quizzesController.get)
+quizzesRoutes.get("/:id", tryCatch(quizzesController.get))
 
-quizzesRoutes.post("/", quizzesController.create)
+quizzesRoutes.post("/", tryCatch(quizzesController.create))
 
-quizzesRoutes.put("/:id", quizzesController.update)
+quizzesRoutes.put("/:id", tryCatch(quizzesController.update))
 
-quizzesRoutes.delete("/:id", quizzesController.delete)
+quizzesRoutes.delete("/:id", tryCatch(quizzesController.delete))
 
 
 module.exports = quizzesRoutes
