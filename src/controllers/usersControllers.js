@@ -3,6 +3,8 @@ const {hash, compare} = require("bcrypt")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 const AppError = require("../utils/appError.js")
 
+const validator = require('validator');
+
 const ERROR_CODES = require("../utils/errorCodes.js")
 const USER_ERROR =  ERROR_CODES.USER_ERROR
 
@@ -20,6 +22,13 @@ class usersController {
 
             const senhaCriptografada = await hash(senha, 8)
 
+            if(matricula.length !== 8){
+                throw new AppError(USER_ERROR.INVALID_MATRICULA)
+            }
+            if (!validator.isEmail(email)) {
+                throw new AppError(USER_ERROR.INVALID_EMAIL);
+            }
+
             const user = {
                 nome : nome,
                 email : email,
@@ -29,7 +38,7 @@ class usersController {
             }
 
             //valida se o campo nome contém somente letras e espaços em branco
-            const regexDoNome = /^[A-Za-z\s]+$/
+            const regexDoNome = /^[A-Za-z\s]{7,}$/
             if (!regexDoNome.test(nome)) {
                 // return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
                 throw new AppError(USER_ERROR.INVALID_NAME)

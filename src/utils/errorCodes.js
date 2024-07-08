@@ -36,6 +36,18 @@ const USER_ERROR = {   // erros de usuário
         statusCode: 401,
         message: "Credenciais inválidas"
     },
+    INVALID_MATRICULA: {
+        statusCode: 406,
+        message: "A matrícula deve conter 8 dígitos"
+    },
+    INVALID_EMAIL: {
+        statusCode: 412,
+        message: "Email inválido"
+    },
+    INVALID_NAME: {
+        statusCode: 400,
+        message: "Nome inválido. O nome deve ter no mínimo 7 caracteres e não pode conter números!"
+    },
     NOT_ADMIN: {
         statusCode: 401,
         message: "O usuário não é admin"
@@ -48,10 +60,6 @@ const USER_ERROR = {   // erros de usuário
         statusCode: 401,
         message: "O usuário não é professor"
     },
-    INVALID_NAME: {
-        statusCode: 422,
-        message: "Nome inválido. O nome deve ter no mínimo 3 caracteres e não pode conter números!"
-    }
 }
 
 const DISCIPLINA_ERROR = {   // erros de disciplina

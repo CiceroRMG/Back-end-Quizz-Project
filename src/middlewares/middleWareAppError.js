@@ -18,16 +18,16 @@ function errorHandler(error, request, response, next){
             error: true,
             type: "DuplicateKeyError",
             message: error.message,
-            info:`${chaveDuplicada} ja esta em uso`
+            info:`O campo ${chaveDuplicada} já está em uso`
         });
     }
 
 
-    if(error instanceof AppError) {
+    if (error instanceof AppError) {
         console.log('SERVIDOR_ERROR', error)
         return response.status(error.statusCode).json({
             error: true,
-            status: "error",
+            type: "OperationalError",
             message: error.message
         })
     }

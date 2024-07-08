@@ -1,4 +1,5 @@
 const express = require('express')
+require('express-async-errors')
 const cors = require('cors')
 const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
 const refreshMiddleware = require('./middlewares/middleWaresRefreshToken.js')
