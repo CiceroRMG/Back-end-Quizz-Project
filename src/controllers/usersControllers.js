@@ -61,7 +61,7 @@ class usersController {
     async get(req, res){
         const id = req.params.id
 
-        const user = await usersModel.findById(id)
+        const user = await usersModel.findById({_id: id}, "nome matricula email tipo")
 
         if (!user){
             throw new AppError(USER_ERROR.DOESNT_EXIST)
