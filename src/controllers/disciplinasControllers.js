@@ -19,11 +19,20 @@ class disciplinasController {
             throw new AppError(USER_ERROR.NOT_ADMIN)
         } 
 
-        const disciplina = {
-            nome : nome,
-            ano : ano,
-            semestre : semestre,
-            prof_id: prof_id
+        let disciplina = {}
+        if(prof_id){
+            disciplina = {
+                nome : nome,
+                ano : ano,
+                semestre : semestre,
+                prof_id: prof_id
+            }
+        } else{
+            disciplina = {
+                nome : nome,
+                ano : ano,
+                semestre : semestre,
+            }
         }
 
         const response = await disciplinasModel.create(disciplina)
