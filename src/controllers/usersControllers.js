@@ -25,6 +25,11 @@ class usersController {
             if(matricula.length !== 8){
                 throw new AppError(USER_ERROR.INVALID_MATRICULA)
             }
+             // Verifica se a matrícula contém apenas números
+            const matriculaNumerica = /^\d+$/
+            if (!matriculaNumerica.test(matricula)) {
+                throw new AppError(USER_ERROR.INVALID_MATRICULA)}
+                
             if (!validator.isEmail(email)) {
                 throw new AppError(USER_ERROR.INVALID_EMAIL);
             }
@@ -38,7 +43,7 @@ class usersController {
             }
 
             //valida se o campo nome contém somente letras e espaços em branco
-            const regexDoNome = /^[A-Za-z\s]{7,}$/
+            const regexDoNome = /^[\p{L}\s]{7,}$/u
             if (!regexDoNome.test(nome)) {
                 // return res.status(400).json({msg: "O campo nome deve conter apenas letras"})
                 throw new AppError(USER_ERROR.INVALID_NAME)

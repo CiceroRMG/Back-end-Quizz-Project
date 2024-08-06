@@ -70,7 +70,7 @@ class usersDisciplinasController {
                 { aluno_id: parametro },
                 { disciplina_id: parametro }
             ]
-        }).populate('disciplina_id', 'nome')
+        }).populate('disciplina_id', 'nome ano semestre')
 
         // verifica se retorna um null ou um array vazio
         if (!alunoDisciplina){
