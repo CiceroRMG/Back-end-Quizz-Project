@@ -118,6 +118,21 @@ class disciplinasController {
 
     }
 
+    async turnNullManyProfId(req, res){
+
+        const id = req.params.id
+
+        const user = await usersModel.findById({_id: id})
+
+        if (!user){
+            throw new AppError(USER_ERROR.DOESNT_EXIST)
+        }
+
+        const disciplinas = await disciplinasModel.updateMany({prof_id: id}, { $set: {prof_id: null}})
+
+        res.status(200).json({disciplinas, msg: "Prof_Id = null"})
+    }
+
     async update(req, res){
 
         const id = req.params.id

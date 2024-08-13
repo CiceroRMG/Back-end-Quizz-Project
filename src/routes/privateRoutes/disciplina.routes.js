@@ -14,6 +14,8 @@ disciplinasRoutes.post("/", tryCatch(disciplinaController.create))
 
 disciplinasRoutes.put("/:id", tryCatch(disciplinaController.update))
 
+disciplinasRoutes.put("/null/:id", tryCatch(disciplinaController.turnNullManyProfId))
+
 disciplinasRoutes.delete("/:id", tryCatch(disciplinaController.delete))
 
 disciplinasRoutes.get("/prof/:id", tryCatch(disciplinaController.getProfessor))

@@ -165,7 +165,7 @@ class usersController {
 
     async getAllProfessor(req, res){
 
-        const professores = await usersModel.find({ tipo: "professor" }, "nome")
+        const professores = await usersModel.find({ tipo: "professor" }, "nome matricula")
         res.status(201).json({professores, msg: "Lista de todos os professores"})
 
     }
