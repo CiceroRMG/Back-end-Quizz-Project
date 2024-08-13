@@ -139,6 +139,30 @@ class usersController {
         res.status(200).json({user, msg: "Usuário atualizado com sucesso"})
     }
 
+
+    async admUpdate(req, res){
+
+        const id = req.params.id
+        const {nome, email, matricula} = req.body
+
+        const user = {
+            nome : nome,
+            email : email,
+            matricula: matricula
+        }
+
+        const updatedUser = await usersModel.findByIdAndUpdate(id, user)
+
+        if (!updatedUser) {
+            // return res.status(404).json({msg: "Usuário não encontrado"})
+            throw new AppError(USER_ERROR.DOESNT_EXIST)
+            
+        }
+
+        res.status(200).json({user, msg: "Usuário atualizado com sucesso"})
+    }
+
+
     async getAllProfessor(req, res){
 
         const professores = await usersModel.find({ tipo: "professor" }, "nome")

@@ -98,18 +98,18 @@ class usersDisciplinasController {
     
     }
 
-    async delete(req, res){
+    async deleteByUserId(req, res){
         // essa aqui não ta fazendo muito sentido, rever depois
         const id = req.params.id
 
-        const userDisciplina = await usersDisciplinasModel.findById(id)
+        const userDisciplina = await usersDisciplinasModel.find({aluno_id: id})
 
-        if (!userDisciplina){
+        if (!userDisciplina || userDisciplina.length === 0){
             // return res.status(404).json({msg: "Disciplina com aluno não encontrado"})
             throw new AppError(RELATION_ERROR.DOESNT_EXIST_RELATION)
         }
 
-        const deletedUserDisciplina = await usersDisciplinasModel.findOneAndDelete(id)
+        const deletedUserDisciplina = await usersDisciplinasModel.deleteMany({aluno_id: id})
 
         res.status(200).json({deletedUserDisciplina, msg: "Disciplina com aluno deletados com sucesso"})
 

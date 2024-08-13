@@ -14,7 +14,7 @@ usersDisciplinasRoutes.get("/:userId/:subjectId", tryCatch(usersDisciplinasContr
 
 usersDisciplinasRoutes.get("/:id", tryCatch(usersDisciplinasController.get))
 
-usersDisciplinasRoutes.delete("/:id", tryCatch(usersDisciplinasController.delete))
+usersDisciplinasRoutes.delete("/:id", tryCatch(usersDisciplinasController.deleteByUserId))
 
 
 module.exports = usersDisciplinasRoutes

@@ -16,6 +16,8 @@ userRoutes.delete("/:id", tryCatch(userController.delete))
 
 userRoutes.put("/:id", tryCatch(userController.update))
 
+userRoutes.put("/adm/:id", tryCatch(userController.admUpdate))
+
 userRoutes.get("/register/getAllProfessor", tryCatch(userController.getAllProfessor))
 
 userRoutes.get("/register/getAllStudents", tryCatch(userController.getAllStudents))
