@@ -10,13 +10,13 @@ const quizzesSchema = new Schema({
     tempo:{
         type: Number,
         required: true,
-        min: 30
+        min: 30,
+        max: 240
     },
     tentativas:{
         type: Number,
         required: true,
         min: 1,
-        max: 3
     },
     disciplina_id:{
         type: Schema.Types.ObjectId,
@@ -39,6 +39,10 @@ const quizzesSchema = new Schema({
         type: String,
         required: true,
         enum: ['exercicio', 'prova']
+    },
+    rascunho: {
+        type: Boolean,
+        required: true
     },
     perguntas:[{
         titulo: {

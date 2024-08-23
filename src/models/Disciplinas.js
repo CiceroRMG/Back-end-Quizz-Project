@@ -28,6 +28,7 @@ const disciplinasSchema = new Schema({
         },
         nome: {
             type: String,
+            ref: "Quizzes",
             default: null
         }
     }]

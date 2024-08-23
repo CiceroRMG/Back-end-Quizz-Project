@@ -77,6 +77,20 @@ class disciplinasController {
         res.status(201).json({disciplinas, msg: "Disciplinas do Professor"})
     }
 
+    async getProfessorSubjectsByToken(req, res){
+
+        const id = req.userId
+
+        const disciplinas = await disciplinasModel.find({prof_id: id})
+
+        if (!disciplinas || disciplinas === 0){
+            // return res.status(404).json({msg: "Esse professor não possui disciplinas"})
+            throw new AppError(DISCIPLINA_ERROR.NOT_HAVE)
+        }
+
+        res.status(201).json({disciplinas, msg: "Disciplinas do Professor"})
+    }
+
     async getSubjectProfessorAndQuizzes(req, res){
 
         const disciplinas = await disciplinasModel.find().populate('prof_id', 'nome')

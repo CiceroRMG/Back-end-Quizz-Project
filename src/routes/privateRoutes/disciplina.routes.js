@@ -6,6 +6,12 @@ const disciplinasRoutes = Router()
 const disciplinasControllers = require("../../controllers/disciplinasControllers")
 const disciplinaController = new disciplinasControllers
 
+disciplinasRoutes.get("/prof/:id", tryCatch(disciplinaController.getProfessor))
+
+disciplinasRoutes.get("/prof", tryCatch(disciplinaController.getProfessorSubjectsByToken))
+
+disciplinasRoutes.get("/painel/data", tryCatch(disciplinaController.getSubjectProfessorAndQuizzes))
+
 disciplinasRoutes.get("/", tryCatch(disciplinaController.getAll))
 
 disciplinasRoutes.get("/:id", tryCatch(disciplinaController.get))
@@ -18,9 +24,6 @@ disciplinasRoutes.put("/null/:id", tryCatch(disciplinaController.turnNullManyPro
 
 disciplinasRoutes.delete("/:id", tryCatch(disciplinaController.delete))
 
-disciplinasRoutes.get("/prof/:id", tryCatch(disciplinaController.getProfessor))
-
-disciplinasRoutes.get("/painel/data", tryCatch(disciplinaController.getSubjectProfessorAndQuizzes))
 
 
 module.exports = disciplinasRoutes

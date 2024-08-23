@@ -14,15 +14,15 @@ class quizzesController {
 
         // verifica se o usuario que esta tentando criar é um admin ou um professor
         const userId = req.userId
-        const verifyIfIsAdmin = await usersModel.findById(userId).select('tipo')
+        const verifyIfIsAdmin = await usersModel.findById({_id: userId}).select('tipo')
         
         if(verifyIfIsAdmin.tipo !== 'admin' && verifyIfIsAdmin.tipo !== 'professor'){
             throw new AppError(USER_ERROR.NOT_PROFESSOR)
         } 
 
-        const {titulo, tempo, tentativas, disciplina_id, data_inicio, data_fim, mensagem, tipo, perguntas} = req.body
+        const {titulo, tempo, tentativas, disciplina_id, data_inicio, data_fim, mensagem, tipo, perguntas, rascunho} = req.body
 
-        const disciplina = await disciplinasModel.findById(disciplina_id)
+        const disciplina = await disciplinasModel.findById({_id: disciplina_id})
         // validando a disciplina existe na outra collection
         if (!disciplina){
             // return res.status(404).json({msg: "Esse id de disciplina não foi encontrado"})
@@ -38,14 +38,15 @@ class quizzesController {
             data_fim: data_fim,
             mensagem: mensagem,
             tipo: tipo,
+            rascunho: rascunho,
             perguntas: perguntas
         }
 
         const response = await quizzesModel.create(quizz)
-
+        console.log(response);
+        
         // colocando os quizzes recem criados dentro da disciplina correspondente
-        const quizzId = response._id
-
+        
         // Verificando se o quizz foi criado com sucesso e possui um _id
         if (!response || !response._id) {
             console.log("Quizz criado, mas sem _id.");
@@ -53,7 +54,11 @@ class quizzesController {
             throw new AppError(QUIZZ_ERROR.CREATE_ERROR)
         }
 
-        await disciplinasModel.findByIdAndUpdate(disciplina_id, {
+        const quizzId = response._id
+        console.log(quizzId);
+        
+
+        await disciplinasModel.findByIdAndUpdate({_id: disciplina_id}, {
             $push: {
                 quizes: {
                     quizz_id: quizzId,
@@ -62,7 +67,7 @@ class quizzesController {
             }
         })
 
-        res.status(201).json({quizz, msg: "Quizz criado com sucesso"}) 
+        res.status(201).json({response, msg: "Quizz criado com sucesso"}) 
 
     }
 
@@ -78,7 +83,7 @@ class quizzesController {
 
         const id = req.params.id
 
-        const quizz = await quizzesModel.findOne({_id: id})
+        const quizz = await quizzesModel.findOne({_id: id}).populate("disciplina_id", "nome")
 
         // se o id não for de um quizz, vai verificar se é de uma disciplina, o nome duplicado(quizz) é só pra não bugar a req do front
         if (!quizz){
@@ -98,14 +103,18 @@ class quizzesController {
 
         const id = req.params.id
 
-        const quizz = await quizzesModel.findById(id)
+        const quizz = await quizzesModel.findById({_id: id})
 
         if (!quizz){
-            // return res.status(404).json({msg: "Quizz não encontrado"})
             throw new AppError(QUIZZ_ERROR.DOESNT_EXIST)
         }
 
-        const deletedQuizz= await quizzesModel.findOneAndDelete(id)
+        const deletedQuizz= await quizzesModel.findOneAndDelete({_id: id})
+
+        await disciplinasModel.updateMany(
+            { "quizes.quizz_id": id },
+            { $pull: { quizes: { quizz_id: id } } }
+        );
 
         res.status(200).json({deletedQuizz, msg: "Quizz deletado com sucesso"})
 
@@ -121,7 +130,7 @@ class quizzesController {
             throw new AppError(USER_ERROR.NOT_PROFESSOR)
         } 
 
-        const {titulo, tempo, tentativas, data_inicio, data_fim, mensagem, tipo, perguntas} = req.body
+        const {titulo, tempo, tentativas, data_inicio, data_fim, mensagem, tipo, perguntas, rascunho} = req.body
 
         const quizz = {
             titulo : titulo,
@@ -131,6 +140,7 @@ class quizzesController {
             data_fim: data_fim,
             mensagem: mensagem,
             tipo: tipo,
+            rascunho: rascunho,
             perguntas: perguntas
         }
 
