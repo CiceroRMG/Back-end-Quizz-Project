@@ -2,8 +2,7 @@ const usersModel = require("../models/Users.js")
 const refreshTokenModels = require("../models/RefreshToken.js")
 
 const jwt = require("jsonwebtoken")
-const SECRET = "pode_ser_qualquer_coisa"
-const refreshSECRET = "essa_e_a_secret_do_refresh_token"
+require('dotenv').config()
 
 const ERROR_CODES = require("../utils/errorCodes.js")
 const AppError = require("../utils/appError.js")
@@ -28,8 +27,8 @@ class refreshTokenController {
             throw new AppError(REFRESH_TOKEN_ERROR.DOESNT_EXIST)
         }
 
-        const newtoken = jwt.sign({userId: usuario._id}, SECRET, { expiresIn: '10m' })
-        const newRefreshToken = jwt.sign({userId: usuario._id}, refreshSECRET, { expiresIn: '7d' })
+        const newtoken = jwt.sign({userId: usuario._id}, process.env.SECRET_KEY, { expiresIn: '30m' })
+        const newRefreshToken = jwt.sign({userId: usuario._id}, process.env.REFRESH_SECRET_KEY, { expiresIn: '1d' })
 
         const newRefreshTokenDb = {
             user_id: usuario._id,

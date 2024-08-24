@@ -1,12 +1,14 @@
 const mongoose = require("mongoose")
 
+require('dotenv').config()
+
 async function main(){
 
     try {
         mongoose.set("strictQuery", true)
 
         await mongoose.connect(
-            "mongodb://localhost:27017"
+            process.env.DB_LINK
         )
 
         console.log("Conectado ao mongoose!")

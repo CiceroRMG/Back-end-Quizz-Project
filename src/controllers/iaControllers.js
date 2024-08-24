@@ -1,6 +1,8 @@
 const ERROR_CODES = require("../utils/errorCodes.js")
 const AppError = require("../utils/appError.js")
 
+require('dotenv').config()
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const generationConfig = {
     maxOutputTokens: 200,
@@ -9,7 +11,7 @@ const generationConfig = {
     topK: 16,
   };
 
-const genAI = new GoogleGenerativeAI("AIzaSyCmF3boZvAMoLf_cIk_7lGACSOoQF7bcQM");
+const genAI = new GoogleGenerativeAI(process.env.IA_TOKEN);
 
 class iaController {
     async generate(req, res){
