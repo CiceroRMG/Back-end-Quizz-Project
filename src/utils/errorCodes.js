@@ -137,4 +137,12 @@ const QUIZZ_ERROR = {  // erros de quizzes
 
 };
 
-module.exports = {USER_ERROR, DISCIPLINA_ERROR, RELATION_ERROR, TOKEN_ERROR, REFRESH_TOKEN_ERROR, QUIZZ_ERROR}
+const IA_ERROR = {  // erros de ia
+    SOMETHING_WRONG: { 
+        statusCode: 404,
+        message: "Algo deu errado na resposta da ia"        
+    },
+
+};
+
+module.exports = {USER_ERROR, DISCIPLINA_ERROR, RELATION_ERROR, TOKEN_ERROR, REFRESH_TOKEN_ERROR, QUIZZ_ERROR, IA_ERROR}
