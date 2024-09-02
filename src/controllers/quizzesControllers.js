@@ -83,10 +83,11 @@ class quizzesController {
 
         const id = req.params.id
 
-        const quizz = await quizzesModel.findOne({_id: id}).populate("disciplina_id", "nome")
+        const quizz = await quizzesModel.findOne({_id: id}).populate("disciplina_id", "nome ano semestre")
 
         // se o id não for de um quizz, vai verificar se é de uma disciplina, o nome duplicado(quizz) é só pra não bugar a req do front
         if (!quizz){
+            
             const quizz = await quizzesModel.find({disciplina_id: id})
             if(!quizz){
                 // return res.status(404).json({msg: "Quizz e Disciplina não encontrados"})
@@ -130,7 +131,7 @@ class quizzesController {
             throw new AppError(USER_ERROR.NOT_PROFESSOR)
         } 
 
-        const {titulo, tempo, tentativas, data_inicio, data_fim, mensagem, tipo, perguntas, rascunho} = req.body
+        const {titulo, tempo, tentativas, data_inicio, data_fim, mensagem, tipo, perguntas, rascunho, disciplina_id} = req.body
 
         const quizz = {
             titulo : titulo,
@@ -141,8 +142,11 @@ class quizzesController {
             mensagem: mensagem,
             tipo: tipo,
             rascunho: rascunho,
-            perguntas: perguntas
+            perguntas: perguntas,
+            disciplina_id: disciplina_id
         }
+
+        console.log('jonathan: sou gay')
 
         const updatedQuizz = await quizzesModel.findByIdAndUpdate(id, quizz)
 
@@ -150,8 +154,25 @@ class quizzesController {
             // res.status(404).json({msg: "Quizz não encontrado"})
             throw new AppError(QUIZZ_ERROR.DOESNT_EXIST)
         }
+        if(disciplina_id){
+            const disciplina = await disciplinasModel.findById(disciplina_id)
+            if(!disciplina){
+                throw new AppError(ERROR_CODES.DISCIPLINA_ERROR.DOESNT_EXIST)
+            }
+    
+            const quizIndex = disciplina.quizes.findIndex(quiz => quiz.quizz_id.toString() === id)
+            if(quizIndex === -1){
+                throw new AppError(ERROR_CODES.QUIZZ_ERROR.DOESNT_EXIST)
+            }
+    
+            await disciplinasModel.findByIdAndUpdate({_id: disciplina_id}, {
+                $set: {
+                    [`quizes.${quizIndex}.nome`]: titulo
+                }
+            })
+        }
 
-        res.status(200).json({quizz, msg: "Quizz atualizado com sucesso"})
+        res.status(200).json({updatedQuizz, msg: "Quizz atualizado com sucesso"})
     }
 }
 
