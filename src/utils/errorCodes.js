@@ -145,4 +145,16 @@ const IA_ERROR = {  // erros de ia
 
 };
 
-module.exports = {USER_ERROR, DISCIPLINA_ERROR, RELATION_ERROR, TOKEN_ERROR, REFRESH_TOKEN_ERROR, QUIZZ_ERROR, IA_ERROR}
+const AWNSERS_ERROR = {  // erros de repostas do aluno
+    EXCEEDED_ATTEMPTS: { 
+        statusCode: 401,
+        message: "O usuário ja excedeu o limite de tentativas"        
+    },
+    DOESNT_HAVE_ATTEMPTS: { 
+        statusCode: 404,
+        message: "O usuário não possui possui nenhuma tentativa"        
+    },
+
+};
+
+module.exports = {USER_ERROR, DISCIPLINA_ERROR, RELATION_ERROR, TOKEN_ERROR, REFRESH_TOKEN_ERROR, QUIZZ_ERROR, IA_ERROR, AWNSERS_ERROR}

@@ -18,10 +18,6 @@ const RespostasSchema = new Schema({
         type: Number,
         default: null
     },
-    tempo: {
-        type: Number,
-        required: true
-    },
     respostas: [{
         pergunta_id: {
             type: Schema.Types.ObjectId,
@@ -31,7 +27,7 @@ const RespostasSchema = new Schema({
         alternativa_id: {
             type: Schema.Types.ObjectId,
             ref: 'Quizzes.perguntas.alternativas',
-            required: true
+            default: null
         }
     }]
 });
