@@ -21,12 +21,12 @@ const RespostasSchema = new Schema({
     respostas: [{
         pergunta_id: {
             type: Schema.Types.ObjectId,
-            ref: 'Quizzes.perguntas',
+            ref: 'Quizzes',
             required: true
         },
         alternativa_id: {
             type: Schema.Types.ObjectId,
-            ref: 'Quizzes.perguntas.alternativas',
+            ref: 'Quizzes',
             default: null
         }
     }]

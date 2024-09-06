@@ -3,6 +3,8 @@ const AppError = require("../utils/appError.js")
 const repostasModel = require("../models/Repostas.js")
 const quizModel = require("../models/Quizzes.js")
 
+const { ObjectId } = require('mongodb');
+
 require('dotenv').config()
 
 class respostas {
@@ -30,8 +32,36 @@ class respostas {
         }
 
         const respostasRes = await repostasModel.create(disciplina)
+
+        // calculando a nota
+        const correctAnswers = {};
+        quiz.perguntas.forEach(pergunta => {
+            const correctOption = pergunta.alternativas.find(alternativa => alternativa.correta);
+            if (correctOption) {
+                correctAnswers[pergunta._id] = correctOption._id;
+            }
+        });
     
-        res.status(201).json({respostasRes, msg: "Sucesso na criação das repostas do aluno"}) 
+        const respostasAluno = respostasRes.respostas
+        let correctCount = 0;
+        respostasAluno.forEach(resposta => {
+            const correct = correctAnswers[resposta.pergunta_id]
+            const anwserStudent = resposta.alternativa_id
+
+            if (new ObjectId(correct).equals(new ObjectId(anwserStudent))) {   
+                correctCount+= 1;
+            }
+        });
+
+        const totalQuestions = quiz.perguntas.length;
+        const nota = (correctCount / totalQuestions) * 10;
+        console.log("nota: " + nota)
+        
+
+        respostasRes.nota = nota
+        respostasRes.save()
+    
+        res.status(201).json({respostasRes, msg: "Sucesso na criação das repostas do aluno", respostasAluno}) 
 
     }
 
