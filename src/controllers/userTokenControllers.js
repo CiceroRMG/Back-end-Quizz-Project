@@ -20,6 +20,21 @@ class userTokenController {
 
     }
 
+    async getUser(req, res) {
+
+        const userId = req.userId
+
+        const usuario = await usersModel.findOne({_id: userId}, "nome")
+
+        if(!usuario){
+            // return res.status(400).json({msg: "Token não esta atribuido a um usuario"})
+            throw new AppError(TOKEN_ERROR.DOESNT_EXIST)
+        }
+
+        res.json({ usuario })
+
+    }
+
     async getType(req, res) {
 
         const userId = req.userId

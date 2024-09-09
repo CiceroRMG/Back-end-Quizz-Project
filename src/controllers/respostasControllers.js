@@ -80,6 +80,19 @@ class respostas {
         res.status(201).json({attempts: attempts, msg: "Mostrando as tentativas do aluno neste quiz"}) 
     }
 
+    async getUserAttempt(req, res){
+
+        const attemptId = req.params.id
+
+        const attempt = await repostasModel.findById(attemptId)
+
+        if(!attempt){
+            throw new AppError(ERROR_CODES.AWNSERS_ERROR.DOESNT_HAVE_ATTEMPTS)
+        }
+    
+        res.status(201).json({attempt: attempt, msg: "Mostrando uma tentativa"}) 
+    }
+
     async verifyUserAttempts(req, res){
         const quizId = req.params.id
 
@@ -97,6 +110,19 @@ class respostas {
         }
 
         res.status(201).json({msg: "Aluno possui tentativas"}) 
+    }
+
+    
+    async getAllStudentsResponses(req, res){
+        const quizId = req.params.id
+
+        const allStudentsResponses = await repostasModel.find({quiz_id: quizId}).populate("aluno_id", "nome")
+
+        if(!allStudentsResponses){
+            throw new AppError(ERROR_CODES.AWNSERS_ERROR.DOESNT_HAVE_ATTEMPTS)
+        }
+
+        res.status(201).json({allStudentsResponses}) 
     }
 
 }

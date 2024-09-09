@@ -9,6 +9,7 @@ const repostasController = new respostasControllers
 repostasRoutes.post("/", tryCatch(repostasController.create))
 repostasRoutes.get("/:id", tryCatch(repostasController.getAttempts))
 repostasRoutes.get("/verifyAttempts/:id", tryCatch(repostasController.verifyUserAttempts))
-repostasRoutes.get("/calculate/:id", tryCatch(repostasController.calculateNote))
+repostasRoutes.get("/responses/:id", tryCatch(repostasController.getAllStudentsResponses))
+repostasRoutes.get("/attempt/:id", tryCatch(repostasController.getUserAttempt))
 
 module.exports = repostasRoutes

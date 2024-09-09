@@ -104,7 +104,7 @@ class usersDisciplinasController {
 
         const userDisciplina = await usersDisciplinasModel.find({aluno_id: id})
 
-        if (!userDisciplina || userDisciplina.length === 0){
+        if (!userDisciplina){
             // return res.status(404).json({msg: "Disciplina com aluno não encontrado"})
             throw new AppError(RELATION_ERROR.DOESNT_EXIST_RELATION)
         }
