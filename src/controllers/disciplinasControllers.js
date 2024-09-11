@@ -2,6 +2,7 @@ const disciplinasModel = require("../models/Disciplinas.js")
 const usersModel = require("../models/Users.js")
 const quizzesModel = require("../models/Quizzes")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
+const respostasModel = require("../models/Repostas.js")
 
 const ERROR_CODES = require("../utils/errorCodes.js")
 const AppError = require("../utils/appError.js")
@@ -122,7 +123,11 @@ class disciplinasController {
 
         const deletedDisciplina = await disciplinasModel.findOneAndDelete({_id: id})
 
-        // Deletar quizzes relacionados com a disciplina
+        // Deletar quizzes relacionados com a disciplina e as respostas dos alunos
+        const disciplinaQuizzes = await quizzesModel.find({ disciplina_id: id });
+        for(const quiz of disciplinaQuizzes){
+            await respostasModel.deleteMany({quiz_id: quiz._id})
+        }
         await quizzesModel.deleteMany({ disciplina_id: id });
 
         // Deletar relações em usersDisciplinas com a disciplina

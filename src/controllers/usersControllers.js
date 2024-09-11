@@ -2,6 +2,7 @@ const usersModel = require("../models/Users.js")
 const {hash, compare} = require("bcrypt")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 const AppError = require("../utils/appError.js")
+const respostasModel = require("../models/Repostas.js")
 
 const validator = require('validator');
 
@@ -96,6 +97,8 @@ class usersController {
         const deletedUser = await usersModel.findOneAndDelete({_id: id})
 
         await usersDisciplinasModel.deleteMany({ aluno_id: id });
+
+        await respostasModel.deleteMany({ aluno_id: id });
 
         res.status(200).json({deletedUser, msg: "Usuario deletado com sucesso"})
 

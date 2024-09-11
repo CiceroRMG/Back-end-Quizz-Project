@@ -84,13 +84,13 @@ class respostas {
 
         const attemptId = req.params.id
 
-        const attempt = await repostasModel.findById(attemptId)
+        const attempt = await repostasModel.findById(attemptId).populate("aluno_id", "nome")
 
         if(!attempt){
             throw new AppError(ERROR_CODES.AWNSERS_ERROR.DOESNT_HAVE_ATTEMPTS)
         }
     
-        res.status(201).json({attempt: attempt, msg: "Mostrando uma tentativa"}) 
+        res.status(201).json({attempt: attempt, msg: "Mostrando uma tentativa"})
     }
 
     async verifyUserAttempts(req, res){

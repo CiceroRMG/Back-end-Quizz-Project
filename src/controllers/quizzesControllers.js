@@ -1,6 +1,7 @@
 const quizzesModel = require("../models/Quizzes.js")
 const disciplinasModel = require("../models/Disciplinas.js")
 const usersModel = require("../models/Users.js")
+const respostasModel = require("../models/Repostas.js")
 
 
 const ERROR_CODES = require("../utils/errorCodes.js")
@@ -117,6 +118,8 @@ class quizzesController {
             { $pull: { quizes: { quizz_id: id } } }
         );
 
+        await respostasModel.deleteMany({quiz_id: id})
+
         res.status(200).json({deletedQuizz, msg: "Quizz deletado com sucesso"})
 
     }
@@ -145,8 +148,6 @@ class quizzesController {
             perguntas: perguntas,
             disciplina_id: disciplina_id
         }
-
-        console.log('jonathan: sou gay')
 
         const updatedQuizz = await quizzesModel.findByIdAndUpdate(id, quizz)
 
