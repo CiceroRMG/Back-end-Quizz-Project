@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 require('express-async-errors')
 const cors = require('cors')
@@ -10,9 +11,7 @@ const refreshTokenRoutes = require("./routes/publicRoutes/refreshToken.routes.js
 
 const app = express()
 app.use(express.json())
-app.use(cors(
-    'http://127.0.0.1:5500/'
-))
+app.use(cors())
 
 const routes = require("./routes/privateRoutes/index.js")
 
@@ -27,7 +26,6 @@ const conn = require("./database/connection.js")
 conn()
 
 
-const PORT = 3333
-app.listen(PORT, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log("O servidor esta rodando na porta: 3333")
 })
