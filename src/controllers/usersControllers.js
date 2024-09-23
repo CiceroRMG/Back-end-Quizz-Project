@@ -3,6 +3,7 @@ const {hash, compare} = require("bcrypt")
 const usersDisciplinasModel = require("../models/UsersDisciplinas.js")
 const AppError = require("../utils/appError.js")
 const respostasModel = require("../models/Repostas.js")
+const disciplinasModel = require("../models/Disciplinas.js")
 
 const validator = require('validator');
 
@@ -94,11 +95,16 @@ class usersController {
             throw new AppError(USER_ERROR.DOESNT_EXIST)
         }
 
+        if(user.tipo === "professor"){
+            await disciplinasModel.updateMany({prof_id: id}, { $set: { prof_id: null } })
+        }
+        if(user.tipo === "aluno"){
+            await usersDisciplinasModel.deleteMany({ aluno_id: id });
+    
+            await respostasModel.deleteMany({ aluno_id: id });
+        }
+
         const deletedUser = await usersModel.findOneAndDelete({_id: id})
-
-        await usersDisciplinasModel.deleteMany({ aluno_id: id });
-
-        await respostasModel.deleteMany({ aluno_id: id });
 
         res.status(200).json({deletedUser, msg: "Usuario deletado com sucesso"})
 

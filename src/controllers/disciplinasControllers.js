@@ -168,7 +168,7 @@ class disciplinasController {
             nome : nome,
             ano : ano,
             semestre : semestre,
-            prof_id: prof_id === '' ? null : prof_id
+            prof_id: !prof_id ? null : prof_id
         }
 
         const updatedDisciplina = await disciplinasModel.findByIdAndUpdate(id, disciplina)

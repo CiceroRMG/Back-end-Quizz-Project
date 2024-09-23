@@ -105,7 +105,6 @@ class respostas {
         const userAttempts = attempts.length
 
         if(userAttempts >= quizAttempts){
-            console.log('entrou no maximo de tentativas');
             throw new AppError(ERROR_CODES.AWNSERS_ERROR.EXCEEDED_ATTEMPTS)
         }
 

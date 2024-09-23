@@ -12,7 +12,7 @@ const QUIZZ_ERROR = ERROR_CODES.QUIZZ_ERROR
 
 class quizzesController {
     async create(req, res){
-
+        
         // verifica se o usuario que esta tentando criar é um admin ou um professor
         const userId = req.userId
         const verifyIfIsAdmin = await usersModel.findById({_id: userId}).select('tipo')
@@ -20,9 +20,9 @@ class quizzesController {
         if(verifyIfIsAdmin.tipo !== 'admin' && verifyIfIsAdmin.tipo !== 'professor'){
             throw new AppError(USER_ERROR.NOT_PROFESSOR)
         } 
-
+        
         const {titulo, tempo, tentativas, disciplina_id, data_inicio, data_fim, mensagem, tipo, perguntas, rascunho} = req.body
-
+        
         const disciplina = await disciplinasModel.findById({_id: disciplina_id})
         // validando a disciplina existe na outra collection
         if (!disciplina){
@@ -84,7 +84,7 @@ class quizzesController {
 
         const id = req.params.id
 
-        const quizz = await quizzesModel.findOne({_id: id}).populate("disciplina_id", "nome ano semestre")
+        const quizz = await quizzesModel.findOne({_id: id}).populate("disciplina_id", "nome ano semestre prof_id")
 
         // se o id não for de um quizz, vai verificar se é de uma disciplina, o nome duplicado(quizz) é só pra não bugar a req do front
         if (!quizz){
