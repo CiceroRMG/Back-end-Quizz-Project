@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 require('express-async-errors')
+const {hash, compare} = require("bcrypt")
 const cors = require('cors')
 const middleware = require('./middlewares/middleWaresPrivateRoutes.js')
 const refreshMiddleware = require('./middlewares/middleWaresRefreshToken.js')
@@ -29,3 +30,13 @@ conn()
 app.listen(process.env.PORT, ()=>{
     console.log("O servidor esta rodando na porta: 3333")
 })
+
+async function saske() {
+    const senhaCriptografada = await hash("12345", 8)
+    console.log(senhaCriptografada);
+    
+}
+
+saske()
+
+
