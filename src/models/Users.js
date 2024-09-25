@@ -8,7 +8,7 @@ const usersSchema = new Schema({
         required: true
     },
     matricula:{
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },
